@@ -15,15 +15,28 @@ body a {
   text-decoration: underline;
 }
 
-body a:hover {
+/* body a:hover {
   background: #000000;
   color: #ffffff;
   text-decoration: none;
-}
+} */
+
+body a.green:hover { background: #9AFFBC; color: #000000;}
+body a.purple:hover { background: #a083ff; color: #000000;}
+body a.teal:hover { background: #1dffe1; color: #000000;}
+body a.orange:hover { background: #ff974d; color: #000000;}
 
 body a:active {
   color: inherit;
 }
+
+mark { background-color: #eeeeee; color: black;}
+.blackMark { background-color: #000000; color: #eeeeee;}
+.greenMark{ background-color: #9AFFBC; color: #000000;}
+.purpleMark{ background-color: #a083ff; color: #000000;}
+.tealMark{ background-color: #1dffe1; color: #000000;}
+.orangeMark{ background-color: #ff974d; color: #000000;}
+.blueMark{ background-color: #49b6ff; color: #000000;}
 
 h1 {
   color: #000000;
@@ -58,6 +71,10 @@ button {
 p {
   font-size: 15pt;
   line-height: 18pt;
+}
+
+small {
+  font-size: 10pt;
 }
 
 .left {
@@ -98,7 +115,6 @@ p {
   width: 75%;
   display: inline-block;
   float: left;
-  /*   background-color:yellow; */
 }
 
 ul {
@@ -141,16 +157,36 @@ iframe {
 .full-width-box {
   width: 100%;
   margin-bottom: 2%;
-  display: inline-block;
+  display: block;
   float: left;
 }
 
 img {
-  height: 400px;
-  display: inline-block;
+  margin: auto;
+  display: block;
+  max-width: 80%; 
+  height: auto;
+
+}
+
+.fullwidth {
+  width: 100%;
   float: left;
-  margin-bottom: 2%;
-  margin-right: 2%;
+}
+
+footer {
+  text-align: center; 
+  padding-bottom: 2em;
+}
+
+hr {
+  display: block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  margin-left: auto;
+  margin-right: auto;
+  border-style: inset;
+  border-width: 1px;
 }
 
 body .gist .gist-file {
@@ -171,7 +207,7 @@ body .gist .blob-wrapper {
 
 body .gist .highlight {
   background-color: transparent;
-  font-family: "Droid Sans Mono", monospace;
+  font-family: 'Comfortaa', sans-serif;
   font-size: 14px;
 }
 
@@ -218,7 +254,7 @@ body .gist .gist-meta {
 
 @media only screen and (max-width: 600px) {
   body {
-    font-family: "Inconsolata", monospace;
+    font-family: 'Comfortaa', sans-serif;
     margin: 2%;
     width: 98%;
     height: 100%;
@@ -252,10 +288,4 @@ body .gist .gist-meta {
 
   border: 1px solid black;
 }
-
-.fullwidth {
-  width: 100%;
-  float: left;
-}
-
 
