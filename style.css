@@ -106,14 +106,12 @@ small {
   display: inline-block;
   float: left;
   text-align: right;
-  
-  /*     background-color:red; */
 }
 
 .content {
   padding-left: 5%;
   width: 75%;
-  display: inline-block;
+  /* display: inline-block; */
   float: left;
 }
 
@@ -166,7 +164,7 @@ img {
   display: block;
   max-width: 80%; 
   height: auto;
-
+  pointer-events: none;
 }
 
 .fullwidth {
@@ -189,7 +187,35 @@ hr {
   border-width: 1px;
 }
 
-body .gist .gist-file {
+.flex-container {
+  display: flex;
+  text-align: center;
+  flex-direction: row;
+}
+
+.flex-item{
+  background-color: #eee;
+  margin: 15px;
+  flex: 50%;
+  font-size: 15pt;
+}
+
+.flex-img{
+  max-height: 200px;
+  width: fit-content;
+}
+
+.flex-list-container {
+  display: flex;
+  text-align: center;
+}
+
+.flex-list{
+  flex: 50%;
+  font-size: 15pt;
+}
+
+/* body .gist .gist-file {
   margin-bottom: 0;
   border: 1px dashed #adb5bd;
   border-radius: 0;
@@ -234,7 +260,7 @@ body .gist .blob-num {
 
 body .gist .gist-meta {
   display: none;
-}
+} */
 
 .nav-link {
   font-size: 15px;
@@ -252,7 +278,7 @@ body .gist .gist-meta {
   display: none;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 1000px) {  
   body {
     font-family: 'Comfortaa', sans-serif;
     margin: 2%;
@@ -261,6 +287,7 @@ body .gist .gist-meta {
   }
   .nav {
     width: 100%;
+    text-align: center;
   }
   .content {
     width: 100%;
@@ -268,14 +295,21 @@ body .gist .gist-meta {
   }
 
   img {
-    width: 100%;
+    max-width: 100%; 
     height: auto;
+  }
+
+  .flex-container {
+    flex-direction: column;
+  }
+
+  .flex-img {
+    max-height: 150px;
+    width: fit-content;
   }
 }
 
 .myBox {
-  /*   background: red; */
-
   padding-left: 10px;
   padding-right: 10px;
   padding-top: 10px;
