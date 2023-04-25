@@ -207,7 +207,9 @@ hr {
 
 .flex-list-container {
   display: flex;
+  background-color: #eeeeee;
   text-align: center;
+  flex-direction: row;
 }
 
 .flex-list{
@@ -300,6 +302,10 @@ body .gist .gist-meta {
   }
 
   .flex-container {
+    flex-direction: column;
+  }
+
+  .flex-list-container {
     flex-direction: column;
   }
 

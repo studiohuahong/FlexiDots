@@ -45,20 +45,38 @@
     <br>
 
     <h2>Components List</h2>
+
     <div class="flex-list-container">
-      <div class="flex-list"><p><mark class="blueMark">Microcontroller:</mark><br>Arduino Nano 33 BLE</p></div>
-      <div class="flex-list"><p>Input/Output</p></div>
-      <div class="flex-list"><p>Power</p></div>
-      <div class="flex-list"><p>Attachment</p></div>
+      <div class="flex-list">
+        <p><mark class="blueMark">Microcontroller:</mark><br>- Arduino Nano 33 BLE <br>- Arduino Nano Shield Module
+        </p>
+      </div>
+      <div class="flex-list">
+        <p><mark class="purpleMark">Input</mark> / <mark class="tealMark">Output</mark> <br>- Button Module<br>-
+          Vibration Motor Module</p>
+      </div>
+      <div class="flex-list">
+        <p><mark class="greenMark">Power</mark> <br>- 9V Battery Module</p>
+      </div>
+      <div class="flex-list">
+        <p>Attachment <br><mark class="blackMark">Band*1</mark> <br><mark class="orangeMark">Connector*1</mark></p>
+      </div>
     </div>
+
+    <br>
 
     <h2>Circuit Basics</h2>
     <p>For the first example, you will build a basic hardware system including a <mark
         class="blueMark">Microcontroller</mark>, one <mark class="purpleMark">Input</mark>, and one <mark
         class="tealMark">Output</mark>.</p>
     <div class="full-width-box"><img src="illustration_circuit.png" /></div>
-    <p>Connect the <mark class="purpleMark">Button</mark> to digital pin 2, and the <mark class="tealMark">Vibration
-        Motor</mark> to digital pin 4. We are also using the on-board LED, which does not require an external module to
+    <p>This example uses the <mark class="blueMark">Arduino Nano 33 BLE</mark> microcontroller. The shield provides
+      extensions to different types of
+      pins: D2/D4/D6 are digital pins that can input or output high and low (1/0) statuses. A0/A2/A6 are analog pins
+      that can input or output analog values. And I2C and UART pins are special ports for certain protocols.</p>
+
+    <p>1️⃣ Connect the <mark class="purpleMark">Button</mark> to D2, and the <mark class="tealMark">Vibration
+        Motor</mark> to D4. We are also using the on-board LED, which does not require an external module to
       be connected.</p>
     <div class="full-width-box"><img src="illustration_connection.png" /></div>
 
