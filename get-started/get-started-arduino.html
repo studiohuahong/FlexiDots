@@ -62,7 +62,8 @@
         <p>Attachment <br><mark class="blackMark">Band*1</mark> <br><mark class="orangeMark">Connector*1</mark></p>
       </div>
     </div>
-
+    <p>If you do not have all the above components, please refer to <a href="../hardware/hardware.html">Hardware</a>
+      page to get the kit.</p>
     <br>
 
     <h2>Circuit Basics</h2>
@@ -74,25 +75,127 @@
       extensions to different types of
       pins: D2/D4/D6 are digital pins that can input or output high and low (1/0) statuses. A0/A2/A6 are analog pins
       that can input or output analog values. And I2C and UART pins are special ports for certain protocols.</p>
-
+    <div class="full-width-box"><img src="illustration_connection.png" /></div>
     <p>1️⃣ Connect the <mark class="purpleMark">Button</mark> to D2, and the <mark class="tealMark">Vibration
         Motor</mark> to D4. We are also using the on-board LED, which does not require an external module to
       be connected.</p>
-    <div class="full-width-box"><img src="illustration_connection.png" /></div>
+    <br>
 
-
-
+    <h2>Coding Basics</h2>
+    <p>2️⃣ Now you can open the Arduino IDE to upload the code. Please make sure that the Arduino IDE has the Mbed OS
+      core for Nano boards installed. Also note that this example is using the Arduino Nano 33 BLE board, so be sure to
+      compile the code for the correct model.</p>
+    <p>To install and set up the Arduino IDE for the Arduino Nano 33 BLE, please refer to the official <a
+        href="https://docs.arduino.cc/hardware/nano-33-ble">Arduino documentation</a>.</p>
+    <p>3️⃣Connect the Arduino with your computer with USB cable, then select the correct port in the Tools Menu. Now you
+      can upload the code:</p>
 
     <div class="full-width-box">
-      <pre data-language="Arduino"><code class="language-css line-numbers">
-      void setup() {
-        // put your setup code here, to run once:
-      }
-      
-      void loop() {
-        // put your main code here, to run repeatedly:
-      }</code></pre>
+      <pre><code class="language-arduino line-numbers">
+        const int buttonPin = 2; // set buttonPin to D2
+        const int ledPin = LED_BUILTIN; // set ledPin to on-board LED
+        const int vibrationMotorPin = 4; // set vibrationMotorPin to D4
+        
+        // the setup function runs once when you press reset or power the board
+        void setup() {
+          pinMode(ledPin, OUTPUT); // use the LED as an output
+          pinMode(vibrationMotorPin, OUTPUT); // use the vibration motor as an output
+          pinMode(buttonPin, INPUT); // use button pin as an input
+        }
+        
+        // the loop function runs over and over again forever
+        void loop() {
+          //detect the status from button
+          if (digitalRead(buttonPin) == HIGH) {
+            // turn LED/Vibration on:
+            digitalWrite(ledPin, HIGH);
+            digitalWrite(vibrationMotorPin, HIGH);
+          } else {
+            // turn LED/Vibration off:
+            digitalWrite(ledPin, LOW);
+            digitalWrite(vibrationMotorPin, LOW);
+          }
+        }
+    </code></pre>
     </div>
+
+    <p>The Arduino code is separated into two basic parts: setup and loop. The setup function runs once when you press
+      reset or power the board, and the loop function runs over and over again forever. Before the setup, we define
+      several variables to help us handle the data in the code.</p>
+    <p>If you press the button, the on-board LED and the vibration motor will be activated.</p>
+    <br>
+
+    <h2>Amazing Wearable</h2>
+    <p>4️⃣ To begin with, use your imagination to assemble the circuit you just built on the FLEXIDOTS band! You can
+      snap the buttons on the electronic components to the holes on the band.</p>
+    <div class="full-width-box"><img src="band_connnection.png" /></div>
+    <p>When designing a wearable device, we often want to incorporate data from our body, such as body temperature,
+      heart rate, and body movement. The benefit of using the Arduino Nano 33 BLE is that it has an on-board IMU
+      (gyroscopes + accelerometers + magnetometer), which allows us to easily detect body movement. For this example, we
+      will use an additional library to read the data from the IMU. Please install the LSM9DS1 library from the library
+      manager, you can refer to the official <a
+        href="https://docs.arduino.cc/tutorials/nano-33-ble/imu-accelerometer#goals">Arduino documentation</a>.</p>
+    <p>5️⃣ In this example, we are reading accelerometer data from the IMU sensor. If the board tilts towards the X and
+      Y
+      axes, the vibration motor and LED will be triggered. Now you can open the Arduino IDE to upload the code:</p>
+
+    <div class="full-width-box">
+      <pre><code class="language-arduino line-numbers">
+          //for accessing IMU sensor we need to load LSM9DS1 library
+          #include <Arduino_LSM9DS1.h>
+          
+          float x, y, z; //set the variables for three axles
+          
+          const int ledPin = LED_BUILTIN; // set ledPin to on-board LED
+          const int vibrationMotorPin = 4; // set vibrationMotorPin to D4
+          
+          void setup() {
+            Serial.begin(9600);
+          
+            if (!IMU.begin()) {
+              Serial.println("Failed to initialize IMU!");
+              while (1);
+            }
+          
+            Serial.print("Accelerometer sample rate = ");
+            Serial.print(IMU.accelerationSampleRate());
+            Serial.println("Hz");
+          
+            pinMode(ledPin, OUTPUT); // use the LED as an output
+            pinMode(vibrationMotorPin, OUTPUT); // use the vibration motor as an output
+          }
+          
+          void loop() {
+            //read x y z value
+            if (IMU.accelerationAvailable()) {
+              IMU.readAcceleration(x, y, z);
+            }
+          
+            //detect tilting
+            if (x > 0.1 || x < -0.1 || y > 0.1 ||y < -0.1) {
+              // turn LED/Vibration on:
+              digitalWrite(ledPin, HIGH);
+              digitalWrite(vibrationMotorPin, HIGH);
+              Serial.println("Tilting!");
+            }else{
+              // turn LED/Vibration off:
+              digitalWrite(ledPin, LOW);
+              digitalWrite(vibrationMotorPin, LOW);
+            }
+            
+            delay(200);
+          }
+      </code></pre>
+    </div>
+
+    <p>6️⃣ Now you can unplug the FLEXIDOTS system from the computer, use the <mark class="greenMark">9V Battery
+        Module</mark> to power the board, and put the band on your wrist. Plug the red wire into the VIN pin and the
+      black wire into the GND pin between the white sockets and the microcontroller. If you turn on the switch on the battery
+      case, the entire hardware will run stand-alone.</p>
+
+    <div class="full-width-box"><img src="power_connection.png" /></div>
+
+    <p>Let's see who has the steadiest hands!</p>
 
     <footer>
       <br>

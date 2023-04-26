@@ -21,7 +21,7 @@ $(document).ready(function()
 function getRandomClass()
 {
     //Store available css classes
-    var classes = new Array("green", "purple", "teal", "orange", );
+    var classes = new Array("green", "purple", "teal", "orange", "blue");
     var randomNumber = Math.floor(Math.random()*classes.length);
     return classes[randomNumber];
 }
