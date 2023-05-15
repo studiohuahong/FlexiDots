@@ -6,6 +6,7 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
   <!-- import the webpage's stylesheet -->
@@ -16,6 +17,7 @@
   <!-- import the webpage's javascript file -->
   <script src="../script.js" defer></script>
   <script src="../prism.js" defer></script>
+
 </head>
 
 
@@ -70,12 +72,12 @@
     <p>For the first example, you will build a basic hardware system including a <mark
         class="blueMark">Microcontroller</mark>, one <mark class="purpleMark">Input</mark>, and one <mark
         class="tealMark">Output</mark>.</p>
-    <div class="full-width-box"><img src="illustration_circuit.png" /></div>
+    <div class="full-width-box"><img src="get-started-images/illustration_circuit.png" /></div>
     <p>This example uses the <mark class="blueMark">Arduino Nano 33 BLE</mark> microcontroller. The shield provides
       extensions to different types of
       pins: D2/D4/D6 are digital pins that can input or output high and low (1/0) statuses. A0/A2/A6 are analog pins
       that can input or output analog values. And I2C and UART pins are special ports for certain protocols.</p>
-    <div class="full-width-box"><img src="illustration_connection.png" /></div>
+    <div class="full-width-box"><img src="get-started-images/illustration_connection.png" /></div>
     <p>1️⃣ Connect the <mark class="purpleMark">Button</mark> to D2, and the <mark class="tealMark">Vibration
         Motor</mark> to D4. We are also using the on-board LED, which does not require an external module to
       be connected.</p>
@@ -88,7 +90,7 @@
     <p>To install and set up the Arduino IDE for the Arduino Nano 33 BLE, please refer to the official <a
         href="https://docs.arduino.cc/hardware/nano-33-ble">Arduino documentation</a>.</p>
     <p>3️⃣Connect the Arduino with your computer with USB cable, then select the correct port in the Tools Menu. Now you
-      can upload the code:</p>
+      can upload the code, you can also download the code here.</p>
 
     <div class="full-width-box">
       <pre><code class="language-arduino line-numbers">
@@ -128,7 +130,7 @@
     <h2>Amazing Wearable</h2>
     <p>4️⃣ To begin with, use your imagination to assemble the circuit you just built on the FLEXIDOTS band! You can
       snap the buttons on the electronic components to the holes on the band.</p>
-    <div class="full-width-box"><img src="band_connnection.png" /></div>
+    <div class="full-width-box"><img src="get-started-images/band_connnection.png" /></div>
     <p>When designing a wearable device, we often want to incorporate data from our body, such as body temperature,
       heart rate, and body movement. The benefit of using the Arduino Nano 33 BLE is that it has an on-board IMU
       (gyroscopes + accelerometers + magnetometer), which allows us to easily detect body movement. For this example, we
@@ -137,7 +139,7 @@
         href="https://docs.arduino.cc/tutorials/nano-33-ble/imu-accelerometer#goals">Arduino documentation</a>.</p>
     <p>5️⃣ In this example, we are reading accelerometer data from the IMU sensor. If the board tilts towards the X and
       Y
-      axes, the vibration motor and LED will be triggered. Now you can open the Arduino IDE to upload the code:</p>
+      axes, the vibration motor and LED will be triggered. Now you can open the Arduino IDE to upload the code, you can also download the code here.</p>
 
     <div class="full-width-box">
       <pre><code class="language-arduino line-numbers">
@@ -193,7 +195,7 @@
       black wire into the GND pin between the white sockets and the microcontroller. If you turn on the switch on the battery
       case, the entire hardware will run stand-alone.</p>
 
-    <div class="full-width-box"><img src="power_connection.png" /></div>
+    <div class="full-width-box"><img src="get-started-images/power_connection.png" /></div>
 
     <p>Let's see who has the steadiest hands!</p>
 

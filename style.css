@@ -55,6 +55,13 @@ h2 {
   font-weight: 600;
 }
 
+h3 {
+  color: #000000;
+  font-family: 'Comfortaa', sans-serif;
+  font-size: 18pt;
+  font-weight: 600;
+}
+
 button {
   font-family: 'Comfortaa', sans-serif;
   background-color: black;
@@ -147,6 +154,7 @@ li a {
 iframe {
   margin: 0;
   padding: 0;
+  padding-bottom: 20px;
   border: none;
   width: 100%;
   display: inline-block;
@@ -291,11 +299,12 @@ body .gist .gist-meta {
   }
   .nav {
     width: 100%;
-    text-align: center;
+    text-align: center; 
   }
   .content {
     width: 100%;
     float: left;
+    padding: 0%;
   }
 
   img {

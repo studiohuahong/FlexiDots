@@ -16,6 +16,10 @@
   <!-- import the webpage's javascript file -->
   <script src="../script.js" defer></script>
   <script src="../prism.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/p5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/addons/p5.sound.min.js"></script>
+  <script src="https://unpkg.com/p5ble@0.0.4/dist/p5.ble.js" type="text/javascript"></script>
 </head>
 
 
@@ -40,24 +44,207 @@
   <div class="content">
     <h1>Get Started with Arduino & p5.js</h1>
 
-    <p>This example will demonstrate how to connect FLEXIDOTS hardware with a p5.js sketch.</p>
+    <p>This example will demonstrate how to connect FLEXIDOTS hardware (Arduino Nano BLE 33) with a p5.js sketch.</p>
     <br>
 
-    <h2>Circuit Basics</h2>
+    <h2>Components List</h2>
+    <div class="flex-list-container">
+      <div class="flex-list">
+        <p><mark class="blueMark">Microcontroller:</mark><br>- Arduino Nano 33 BLE <br>- Arduino Nano Shield Module
+        </p>
+      </div>
+      <div class="flex-list">
+        <p><mark class="purpleMark">Input</mark> / <mark class="tealMark">Output</mark> <br>- Button Module<br>-
+          Vibration Motor Module</p>
+      </div>
+      <div class="flex-list">
+        <p><mark class="greenMark">Power</mark> <br>- 9V Battery Module</p>
+      </div>
+      <div class="flex-list">
+        <p>Attachment <br><mark class="blackMark">Band*1</mark> <br><mark class="orangeMark">Connector*1</mark></p>
+      </div>
+    </div>
+    <p>If you do not have all the above components, please refer to <a href="../hardware/hardware.html">Hardware</a>
+      page to get the kit.</p>
+    <br>
 
 
+    <h2>About Bluethooth® Low Energy & ArduinoBLE</h2>
 
+    <p>In order to communicate between hardware and software, we will use Bluetooth Low Energy (BLE) as a wireless
+      protocol to communicate. The fundamental logic of how BLE works is unlike standard Bluetooth communication based
+      on an asynchronous serial connection (UART), a BLE radio acts like a community bulletin board that the devices can
+      read and write. The information on this bulletin board is called characteristic. Devices that are connected to
+      this bulletin board can be notified when a change happened, or update the characteristic. For more information
+      about BLE, you can refer to this documentation from <a
+        href="https://learn.adafruit.com/introduction-to-bluetooth-low-energy?view=all">Adafruit</a>.</p>
 
+    <p>Arduino Nano 33 BLE stands for the microcontroller which is operating under 3.3V and supports Bluetooth Low
+      Energy. To activate BLE, It requires an additional library called ArduinoBLE. For detailed information, you can
+      refer to <a href="https://www.arduino.cc/reference/en/libraries/arduinoble/">ArduinoBLE</a> documentation. </p>
+    <br>
+
+    <h2>Communication</h2>
+    <p>In this example, we will create a basic two-direction communication, which the hardware system can control the p5
+      sketche, and the p5 sketch can controll the hardware system.</p>
+
+    <h3>Hardware</h3>
+    <p>1️⃣ Assemble a FLEXIDOTS system as shown in the <a href="get-started-arduino.html">Get Started with Arduino</a>
+      page,
+      this system contains an <marl class="blueMark">Arduino Nano 33 BLE</marl> as the microcontroller, a <mark
+        class="purpleMark">button</mark> input, a <mark class="tealMark">vibration motor</mark> output, and a <mark
+        class="greenMark">9V battery module</mark>.</p>
+    <div class="full-width-box"><img src="get-started-images/illustration_connection.png" /></div>
+    <p>⚠️ Make sure to unplug the battery module before connecting the Arduino to the computer with a USB cable.
+      Multiple power sources may damage your microcontroller or your computer.</p>
+    <p>2️⃣ You can upload the code to the Arduino, you can also download the code here.</p>
 
     <div class="full-width-box">
-      <pre data-language="Arduino"><code class="language-css line-numbers">
+      <pre><code class="language-arduino line-numbers">
+        /*
+        FLEXIDOTS Get Started with Arduino & p5.js
+        https://studiohuahong.github.io/FlexiDots/get-started/get-started-arduino-p5.html
+      */
+      
+      #include <ArduinoBLE.h>
+      
+      const int ledPin = LED_BUILTIN; // set ledPin to on-board LED
+      const int buttonPin = 2; // set buttonPin to digital pin 2
+      const int vibrationPin = 4; // set vibrationPin to digital pin 4
+      
+      BLEService ledService("19B10010-E8F2-537E-4F6C-D104768A1214"); // create service
+      
+      // create switch characteristic and allow remote device to read and write
+      BLEByteCharacteristic ledCharacteristic("19B10011-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
+      // create button characteristic and allow remote device to get notifications
+      BLEByteCharacteristic buttonCharacteristic("19B10012-E8F2-537E-4F6C-D104768A1214", BLERead | BLENotify);
+      
       void setup() {
-        // put your setup code here, to run once:
+        Serial.begin(9600);
+        //while (!Serial); //disable this line, I have no idea why they want this line
+      
+        pinMode(ledPin, OUTPUT); // use the LED as an output
+        pinMode(vibrationPin, OUTPUT); // use the vibration motor as an output
+        pinMode(buttonPin, INPUT); // use button pin as an input
+      
+        // begin initialization
+        if (!BLE.begin()) {
+          Serial.println("starting Bluetooth® Low Energy module failed!");
+          while (1);
+        }
+      
+        // set the local name peripheral advertises
+        BLE.setLocalName("Flexidots Arduino Nano BLE");
+        // set the UUID for the service this peripheral advertises:
+        BLE.setAdvertisedService(ledService);
+      
+        // add the characteristics to the service
+        ledService.addCharacteristic(ledCharacteristic);
+        ledService.addCharacteristic(buttonCharacteristic);
+      
+        // add the service
+        BLE.addService(ledService);
+      
+        ledCharacteristic.writeValue(0);
+        buttonCharacteristic.writeValue(0);
+      
+        // start advertising
+        BLE.advertise();
+      
+        Serial.println("Bluetooth® device active, waiting for connections...");
       }
       
       void loop() {
-        // put your main code here, to run repeatedly:
-      }</code></pre>
+        // poll for Bluetooth® Low Energy events
+        BLE.poll();
+      
+        // read the current button pin state
+        char buttonValue = digitalRead(buttonPin);
+      
+        // has the value changed since the last read
+        bool buttonChanged = (buttonCharacteristic.value() != buttonValue);
+      
+        if (buttonChanged) {
+          // button state changed, update characteristics
+          ledCharacteristic.writeValue(buttonValue);
+          buttonCharacteristic.writeValue(buttonValue);
+        }
+      
+        if (ledCharacteristic.written() || buttonChanged) {
+          // update LED, either central has written to characteristic or button state has changed
+          if (ledCharacteristic.value()) {
+            Serial.println("LED on");
+            digitalWrite(ledPin, HIGH);
+            digitalWrite(vibrationPin, HIGH);
+          } else {
+            Serial.println("LED off");
+            digitalWrite(ledPin, LOW);
+            digitalWrite(vibrationPin, LOW);
+          }
+        }
+      }
+    </code></pre>
+    </div>
+
+    <p>If you press the button, even the Arduino is not connected to BLE, the on-board LED and the vibration motor will
+      be activated.</p>
+    <br>
+
+    <h3>Software</h3>
+    <p>To import the p5.ble.js library, copy the following code in the index.html file</p>
+    <div class="full-width-box">
+      <pre><code class="language-html line-numbers">
+        &lt;script 
+      src="https://unpkg.com/p5ble@0.0.7/dist/p5.ble.js"
+      type="text/javascript"
+      &gt;&lt;/script&gt;
+    </code></pre>
+    </div>
+
+    <p>In this example, first, you need to connect to the FLEXIDOTS hardware. Click the connect button and you will see
+      the FLEXIDOTS Arduino is shown, then pair the device.</p>
+    <p>You will control the white circle by your cursor in this p5 sketch. Everytime if the white circle collides with
+      the blue circle in the middle, the sketch will update the vibration notification and trigger the vibration motor
+      hardware. If you press the button, the sketch background color will change into teal color. This is a very
+      essential example to
+      demonstrate a two-direction communication.</p>
+    <p>3️⃣ You can try the p5 sketch on p5 editor, or you can download the code here.</p>
+
+    <iframe height="450px" width="400px" src="get-started-arduino-p5-files\index.html" allow-popups></iframe>
+
+    <h2>Additional Notes</h2>
+    <p>The BLE communication mechanism used for updating characteristics has certain limitations with respect to the
+      speed of information delivery. By default, the p5 sketch refreshes at 60 frames per second, which may cause GATT
+      operation congestion if the p5 sketch is updated in real-time with BLE characteristics. To overcome this
+      limitation, a custom GATT interval countdown function that allows the p5 sketch to send updates at intervals:</p>
+
+    <div class="full-width-box">
+      <pre><code class="language-javascript line-numbers">
+        //send notifications at intervals to prevent GATT operation congestion
+        let GATTinterval = 20;
+        let GATTsendData = false;
+        //avoid send duplicate notifications to prevent GATT operation congestion
+        let avoidDuplicateData = true;
+      </code></pre>
+    </div>
+
+    <p>In the function draw( )</p>
+
+    <div class="full-width-box">
+      <pre><code class="language-javascript line-numbers">
+        //countdown the GATTinterval to send notifications at intervals to prevent GATT operation congestion
+        if(GATTinterval > 0 ){
+          GATTinterval -= 1;
+          GATTsendData = false;
+        }else{
+          GATTinterval = 20;
+          GATTsendData = true;
+        }
+
+        if(myBLE.isConnected() && GATTsendData == true){
+        //update characteristics here
+        }
+      </code></pre>
     </div>
 
     <footer>
