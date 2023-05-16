@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>IMU Drawing Machine · FLEXIDOTS</title>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+  <!-- import the webpage's stylesheet -->
+  <link rel="stylesheet" href="../style.css" />
+  <link href="../prism.css" rel="stylesheet" />
+  <link rel="icon" type="image/x-icon" href="../logo.ico">
+
+  <!-- import the webpage's javascript file -->
+  <script src="../script.js" defer></script>
+  <script src="../prism.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/p5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/addons/p5.sound.min.js"></script>
+  <script src="https://unpkg.com/p5ble@0.0.4/dist/p5.ble.js" type="text/javascript"></script>
+</head>
+
+
+<body>
+
+  <!-- navigation menu -->
+  <div class="nav">
+    <h1>FLEXIDOTS</h1>
+    <ul>
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../get-started/get-started.html"><mark>Get Started</mark></a></li>
+      <li><a href="../examples/examples.html">Examples</a></li>
+      <li><a href="../hardware/hardware.html">Hardware</a></li>
+      <li><a href="../software/software.html">Software</a></li>
+      <li><a href="../reference/reference.html">Reference</a></li>
+      <li><a href="../download/download.html">Download</a></li>
+      <li><a href="../about/about.html">About</a></li>
+    </ul>
+  </div>
+
+  <!-- main content -->
+  <div class="content">
+    <h1>IMU Drawing Machine</h1>
+
+    <h2>Components List</h2>
+    <div class="flex-list-container">
+      <div class="flex-list">
+        <p><mark class="blueMark">Microcontroller:</mark><br>- Arduino Nano 33 BLE <br>- Arduino Nano Shield Module
+        </p>
+      </div>
+      <div class="flex-list">
+        <p><mark class="purpleMark">Input</mark> / <mark class="tealMark">Output</mark> <br>- None</p>
+      </div>
+      <div class="flex-list">
+        <p><mark class="greenMark">Power</mark> <br>- 9V Battery Module</p>
+      </div>
+      <div class="flex-list">
+        <p>Attachment <br><mark class="blackMark">Band*1</mark> <br><mark class="orangeMark">Connector*1</mark></p>
+      </div>
+    </div>
+    <p>If you do not have all the above components, please refer to <a href="../hardware/hardware.html">Hardware</a>
+      page to get the kit.</p>
+    <br>
+
+    <h3>Hardware</h3>
+    <p>About accessing IMU sensor from Arduino Nano 33 BLE, please refer to <a href="../get-started/get-started-arduino.html">Get Started with Arduino</a></p>
+
+    <div class="full-width-box">
+      <pre><code class="language-arduino line-numbers">
+        /*
+        FlexiDots IMU Drawing Machine
+        https://studiohuahong.github.io/FlexiDots/examples/IMU-drawing-machine.html
+        */
+        #include <ArduinoBLE.h>
+        #include <Arduino_LSM9DS1.h> // change to Arduino_LSM6DS3.h for Nano 33 IoT or Uno WiFi Rev 2
+        
+        BLEService        imuService                 ("2A5A20B9-0000-4B9C-9C69-4975713E0FF2");
+        BLECharacteristic accelerationCharacteristic ("2A5A20B9-0001-4B9C-9C69-4975713E0FF2", BLENotify, sizeof(float) * 3);
+        
+        void setup() {
+          Serial.begin(9600);
+          //  while (!Serial); // uncomment to wait for Serial port to be opened
+        
+          if (!IMU.begin()) {
+            Serial.println("Failed to initialize IMU!");
+            while (1);
+          }
+        
+          if (!BLE.begin()) {
+            Serial.println("Failed to initialize IMU!");
+            while (1);
+          }
+        
+          BLE.setLocalName("FlexiDots IMU Drawing Machine");
+          BLE.setDeviceName("FlexiDots IMU Drawing Machine");
+          BLE.setAdvertisedService(imuService);
+        
+          imuService.addCharacteristic(accelerationCharacteristic);
+        
+          BLE.addService(imuService);
+          BLE.advertise();
+        }
+        
+        void loop() {
+          if (BLE.connected()) {
+            if (accelerationCharacteristic.subscribed() && IMU.accelerationAvailable()) {
+              float acceleration[3];
+              // x, y, z
+              IMU.readAcceleration(acceleration[0], acceleration[1], acceleration[2]);
+              accelerationCharacteristic.writeValue(acceleration, sizeof(acceleration));
+            }
+          }
+        }
+    </code></pre>
+    </div>
+
+    <h3>Software</h3>
+
+    <p>You can try the sketch on p5 editor, or you can download the code here.</p>
+
+    <iframe height="450px" width="400px" src="IMU-drawing-machine/index.html" allow-popups></iframe>
+
+    <footer>
+      <br>
+      <hr>
+      <small>by studiohuahong * MIT license</small>
+    </footer>
+
+  </div>
+</body>
+
+</html>

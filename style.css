@@ -83,7 +83,7 @@ p {
 }
 
 small {
-  font-size: 10pt;
+  font-size: 12pt;
 }
 
 .left {
@@ -208,11 +208,18 @@ hr {
   margin: 15px;
   flex: 50%;
   font-size: 15pt;
+  /* align-self: last baseline; */
+
 }
 
 .flex-img{
   max-height: 200px;
-  width: fit-content;
+  width: fit-content; 
+}
+
+.flex-img-width{
+  max-width: 400px;
+  padding-top: 20px;
 }
 
 .flex-list-container {
@@ -299,7 +306,8 @@ body .gist .gist-meta {
   }
   .nav {
     width: 100%;
-    text-align: center; 
+    text-align: left; 
+    background-color: #eee;
   }
   .content {
     width: 100%;
