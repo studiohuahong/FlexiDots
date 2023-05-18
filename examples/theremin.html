@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>IMU Drawing Machine · FLEXIDOTS</title>
+  <title>Theremin · FLEXIDOTS</title>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -47,17 +47,17 @@
     <h2>Components List</h2>
     <div class="flex-list-container">
       <div class="flex-list">
-        <p><mark class="blueMark">Microcontroller:</mark><br>- Arduino Nano 33 BLE <br>- Arduino Nano Shield Module
+        <p><mark class="blueMark">Microcontroller:</mark><br>- Arduino Nano 33 BLE*2 <br>- Arduino Nano Shield Module*2
         </p>
       </div>
       <div class="flex-list">
-        <p><mark class="purpleMark">Input</mark> / <mark class="tealMark">Output</mark> <br>- None</p>
+        <p><mark class="purpleMark">Input</mark> / <mark class="tealMark">Output</mark> <br>- Button*1</p>
       </div>
       <div class="flex-list">
-        <p><mark class="greenMark">Power</mark> <br>- 9V Battery Module</p>
+        <p><mark class="greenMark">Power</mark> <br>- 9V Battery Module*2</p>
       </div>
       <div class="flex-list">
-        <p>Attachment <br><mark class="blackMark">Band*1</mark> <br><mark class="orangeMark">Connector*1</mark></p>
+        <p>Attachment <br><mark class="blackMark">Band</mark> <br><mark class="orangeMark">Connector</mark></p>
       </div>
     </div>
     <p>If you do not have all the above components, please refer to <a href="../hardware/hardware.html">Hardware</a>
@@ -65,18 +65,22 @@
     <br>
 
     <h2>Software</h2>
-    <p>You can try the sketch on <a href="https://editor.p5js.org/huah511/sketches/1PfJrFUW1">p5 editor</a>, or you can download the code <a href="">here</a>.</p>
-    <iframe height="450px" width="400px" src="IMU-drawing-machine/index.html" allow-popups></iframe>
+    <p>You can try the sketch on <a href="https://editor.p5js.org/huah511/sketches/rgxrI-Axz">p5 editor</a>, or you can download the code <a href="">here</a>.</p>
+    <iframe height="450px" width="400px" src="theremin/index.html" allow-popups></iframe>
 
     <br>
     <h2>Hardware</h2>
+    <p>This example is using two hardware systems for inputs. One is controlling the position by IMU sensor, and the other one is using a button for triggering the sound.</p>
+    
+    <br>
+    <h3>IMU Input</h3>
     <p>About accessing IMU sensor from Arduino Nano 33 BLE, please refer to <a href="../get-started/get-started-arduino.html">Get Started with Arduino</a></p>
 
     <div class="full-width-box">
       <pre><code class="language-arduino line-numbers">
         /*
-        FlexiDots IMU Drawing Machine
-        https://studiohuahong.github.io/FlexiDots/examples/IMU-drawing-machine.html
+        FlexiDots Theremin
+        https://studiohuahong.github.io/FlexiDots/examples/theremin.html
         */
         #include <ArduinoBLE.h>
         #include <Arduino_LSM9DS1.h> // change to Arduino_LSM6DS3.h for Nano 33 IoT or Uno WiFi Rev 2
@@ -122,6 +126,83 @@
     </div>
 
     <br>
+    <h3>Button Imput</h3>
+
+    <p>Connect the <mark class="purpleMark">button</mark> on D2 pin.</p>
+
+    <div class="full-width-box">
+      <pre><code class="language-arduino line-numbers">
+        /*
+        FLEXIDOTS Theremin Button
+        https://studiohuahong.github.io/FlexiDots/get-started/get-started-arduino-p5.html
+      */
+      
+      #include <ArduinoBLE.h>
+      
+      const int ledPin = LED_BUILTIN; // set ledPin to on-board LED
+      const int buttonPin = 2; // set buttonPin to digital pin 4
+      
+      BLEService        imuService                 ("2A5A20B9-0000-4B9C-9C69-4975713E0FF2");
+      //BLECharacteristic accelerationCharacteristic ("2A5A20B9-0001-4B9C-9C69-4975713E0FF2", BLENotify, sizeof(float) * 3);
+      BLEByteCharacteristic buttonCharacteristic("2A5A20B9-0002-4B9C-9C69-4975713E0FF2", BLERead | BLENotify);
+      
+      void setup() {
+        Serial.begin(9600);
+        //while (!Serial); //disable this line, I have no idea why they want this line
+      
+        pinMode(ledPin, OUTPUT); // use the LED as an output
+        pinMode(buttonPin, INPUT); // use button pin as an input
+      
+        // begin initialization
+        if (!BLE.begin()) {
+          Serial.println("starting Bluetooth® Low Energy module failed!");
+          while (1);
+        }
+      
+        // set the local name peripheral advertises
+        BLE.setLocalName("FlexiDots Theremin Button");
+        BLE.setDeviceName("FlexiDots Theremin Button");
+        // set the UUID for the service this peripheral advertises:
+        BLE.setAdvertisedService(imuService);
+      
+        // add the characteristics to the service
+        imuService.addCharacteristic(buttonCharacteristic);
+      
+        // add the service
+        BLE.addService(imuService);
+      
+        buttonCharacteristic.writeValue(0);
+      
+        // start advertising
+        BLE.advertise();
+      
+        Serial.println("Bluetooth® device active, waiting for connections...");
+      }
+      
+      void loop() {
+        // poll for Bluetooth® Low Energy events
+        BLE.poll();
+      
+        // read the current button pin state
+        char buttonValue = digitalRead(buttonPin);
+      
+        // has the value changed since the last read
+        bool buttonChanged = (buttonCharacteristic.value() != buttonValue);
+      
+        if (buttonChanged) {
+          // button state changed, update characteristics
+          buttonCharacteristic.writeValue(buttonValue);
+        }
+      
+        if (buttonValue == 1){
+          digitalWrite(ledPin, HIGH);
+        }else{
+          digitalWrite(ledPin, LOW);
+        }
+      }
+    </code></pre>
+    </div>
+
 
     <footer>
       <br>
