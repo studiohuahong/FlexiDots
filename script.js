@@ -25,3 +25,25 @@ function getRandomClass()
     var randomNumber = Math.floor(Math.random()*classes.length);
     return classes[randomNumber];
 }
+
+let mouseCursor = document.querySelector('.custom-cursor')
+window.addEventListener("mousemove", cursor)
+
+function cursor(e) {
+    // mouseCursor.style.left = `${e.clientX}px`;
+    // mouseCursor.style.top = `${e.clientY}px`;
+    mouseCursor.style.left = e.pageX + "px";
+    mouseCursor.style.top = e.pageY + "px";
+}
+
+const links = document.querySelectorAll('a');
+
+links.forEach((link) => {
+    link.addEventListener('mouseover', () => {
+        mouseCursor.style.backgroundColor = 'white';
+    });
+
+    link.addEventListener('mouseout', () => {
+        mouseCursor.style.backgroundColor = 'black';
+    });
+});

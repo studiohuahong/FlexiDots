@@ -1,5 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap');
 
+
+html {
+  cursor: none;
+}
+
+.custom-cursor {
+  width: 28px;
+  height: 28px;
+  background-color: black;
+  border-radius: 50%;
+  position: absolute;
+  pointer-events: none; /* Ensure the cursor does not interfere with other elements */
+  transform: translate(-50%, -50%);
+}
+
 body {
   font-family: 'Comfortaa', sans-serif;
   font-weight: 400;
@@ -14,6 +29,7 @@ body {
 body a {
   color: #000000;
   text-decoration: underline;
+  cursor: none;
 }
 
 /* body a:hover {
